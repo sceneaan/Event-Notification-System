@@ -18,6 +18,7 @@ A robust event-driven notification system that allows users to subscribe to even
 - **Database**: MongoDB (Mongoose ODM)
 - **Language**: TypeScript
 - **Scheduling**: node-cron
+- **Testing**: Jest
 
 ## API Documentation
 
