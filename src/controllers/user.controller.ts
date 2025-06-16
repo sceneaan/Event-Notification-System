@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { createUser, updatePreferences, findUserById, getAllUsers } from '../services/user.service';
+import mongoose from 'mongoose';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -12,15 +13,13 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       res.status(400).json({ message: 'Phone is required' });
       return;  
     }
-    if (phone && typeof phone !== 'number') {
-      res.status(400).json({ message: 'Phone must be a number' });
-      return;
-    } else if (phone && phone.length < 10) {
+    const phoneStr = String(phone);
+    if (phoneStr.length < 10) {
       res.status(400).json({ message: 'Phone number must be at least 10 characters long' });
       return;
     } 
 
-    const user = await createUser(name, email, phone);
+    const user = await createUser(name, email, phoneStr);
     res.status(201).json(user);
   } catch (error: any) {
     next(error);
@@ -36,6 +35,11 @@ export const updateUserPreferences = async (req: Request, res: Response, next: N
     if (!userId) {
         res.status(400).json({ message: 'User ID is required' });
         return;
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+       res.status(400).json({ message: 'Invalid user ID' });
+       return;
     }
 
     if (!preferences || !Array.isArray(preferences) || preferences.length === 0) {
