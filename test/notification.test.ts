@@ -138,7 +138,7 @@ describe('Notification System', () => {
   // Process pending notifications
   for (const notification of pendingNotifications) {
     notification.methods.forEach((method: any) => {
-      console.log(`[TEST] Sending ${method} notification for ${notification}`);
+      console.log(`[TEST] Sending ${method} notification for ${notification.eventId._id}`);
     });
     notification.sent = true;
     await notification.save();
